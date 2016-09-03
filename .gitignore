@@ -33,3 +33,5 @@ _testmain.go
 ## Se ignora el ejecutable
 goapp
 
+.idea/
+
