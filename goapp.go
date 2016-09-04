@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	//"log"
 )
 
 // Page sirve para la estructura de las páginas
@@ -17,16 +19,26 @@ func (p *Page) save() error {
 	return err
 }
 
-func loadPage(title string) *Page {
+func loadPage(title string) (*Page, error) {
 	filename := "./data/" + title + ".txt"
-	body, _ := ioutil.ReadFile(filename)
+	body, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
 	page := &Page{Title: title, Body: body}
-	return page
+	return page, err
+}
+
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/view/"):]
+	p, err := loadPage(title)
+	if err != nil {
+		fmt.Fprintf(w, "<h1>%s</h1>", err)
+	}
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
 }
 
 func main() {
-	/*page := &Page{Title: "primer", Body: []byte("Nuestra primer página")}
-	page.save()*/
-	page := loadPage("primer")
-	fmt.Println(page.Title, string(page.Body))
+	http.HandleFunc("/view/", viewHandler)
+	http.ListenAndServe(":8080", nil)
 }
