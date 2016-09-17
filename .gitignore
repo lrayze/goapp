@@ -34,4 +34,6 @@ _testmain.go
 goapp
 
 .idea/
-
+node_modules/
+public/css/styles.css
+public/css/styles.css.map
