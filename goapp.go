@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"text/template"
 	//"log"
 )
 
@@ -29,13 +30,20 @@ func loadPage(title string) (*Page, error) {
 	return page, err
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/view/"):]
+func showHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/show/"):]
 	p, err := loadPage(title)
 	if err != nil {
 		fmt.Fprintf(w, "<h1>%s</h1>", err)
 	}
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+
+	// template file
+	t, err := template.ParseFiles("./views/show.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	t.Execute(w, p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,20 +52,14 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		page = &Page{Title: title}
 	}
-	fmt.Fprintf(w, `
-		<html>
-		<head>
-			<title>%s</title>
-		</head>
-		<body>
-			<h1>%s</h1>
-			<form method="POST" action="/save/%s">
-				<textarea name="body">%s</textarea>
-				<button>Guardar</button>
-			</form>
-		</body>
-		</html>
-	`, page.Title, page.Title, page.Title, page.Body)
+
+	// template file
+	t, err := template.ParseFiles("./views/edit.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	t.Execute(w, page)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,18 +67,20 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 	body := r.FormValue("body")
 	page := &Page{Title: title, Body: []byte(body)}
 	page.save()
-	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+	http.Redirect(w, r, "/show/"+title, http.StatusFound)
 }
 
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Bienvenidos</h1>")
+	fmt.Fprintf(w, "<h1>Bienvenidos otra vez</h1>")
 }
 
 func main() {
-	http.HandleFunc("/", welcomeHandler)
-	http.HandleFunc("/view/", viewHandler)
+	fs := http.FileServer(http.Dir("./public"))
+	http.Handle("/css/", fs)
+	http.HandleFunc("/show/", showHandler)
 	http.HandleFunc("/edit/", editHandler)
 	http.HandleFunc("/save/", saveHandler)
-	fmt.Println("Ingrese a http://localhost:8080/view/")
+	http.HandleFunc("/", welcomeHandler)
+	fmt.Println("Ingrese a http://localhost:8080/show/")
 	http.ListenAndServe(":8080", nil)
 }
