@@ -1,1 +1,0 @@
-{"version":3,"sources":["utilities.css"],"names":[],"mappings":"AAAA;EACE,UAAU;EACV,iBAAiB;EACjB,cAAc;EACd,YAAY,EAAE","file":"components/utilities.css","sourcesContent":[".container {\n  margin: 0;\n  max-width: 768px;\n  padding: 10px;\n  width: 100%; }\n"],"sourceRoot":"/source/"}
