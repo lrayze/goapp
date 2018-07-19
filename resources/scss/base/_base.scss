@@ -1,16 +1,17 @@
+html {
+  font-size: 18px;
+}
 *,
 *::after,
 *::before{
   box-sizing: border-box;
 }
+
 body{
   color: $color1;
   display: flex;
   font-family: "Oxygen";
   font-size: 1rem;
-}
-form{
-  margin: 0;
 }
 h1{
   color: $color3;
@@ -19,8 +20,8 @@ h1{
   line-height: 1;
   text-align: center;
 }
-html{
-  font-size: 18px;
+form {
+  margin: 0;
 }
 input,
 textarea{

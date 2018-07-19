@@ -1,0 +1,25 @@
+{
+  "name": "goapp",
+  "version": "1.0.0",
+  "description": "Desarrollo de una web app con Go.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lrayze/goapp.git"
+  },
+  "author": "lrayze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lrayze/goapp/issues"
+  },
+  "homepage": "https://github.com/lrayze/goapp#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4"
+  }
+}
